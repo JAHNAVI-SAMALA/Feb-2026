@@ -1,0 +1,11 @@
+class Solution:
+    def constructTransformedArray(self, nums: list[int]) -> list[int]:
+        n = len(nums)
+        result = [0] * n
+        for i, num in enumerate(nums):
+            if num == 0:
+                result[i] = 0
+            else:
+                target = ((i + num) % n + n) % n
+                result[i] = nums[target]
+        return result
