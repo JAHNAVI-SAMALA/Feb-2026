@@ -1,0 +1,47 @@
+class Solution:
+    def longestBalanced(self, s: str) -> int:
+        def calc1(s):
+            ans = 0
+            i = 0
+            while i < len(s):
+                j = i + 1
+                while j < len(s) and s[j] == s[i]:
+                    j += 1
+                ans = max(ans, j - i)
+                i = j
+            return ans
+
+        def calc2(s, a, b):
+            res = 0
+            i = 0
+            while i < len(s):
+                while i < len(s) and s[i] != a and s[i] != b:
+                    i += 1
+                pos = {0: i - 1}
+                d = 0
+                while i < len(s) and (s[i] == a or s[i] == b):
+                    d += 1 if s[i] == a else -1
+                    if d in pos:
+                        res = max(res, i - pos[d])
+                    else:
+                        pos[d] = i
+                    i += 1
+            return res
+
+        def calc3(s):
+            pos = {(0, 0): -1}
+            cnt = [0, 0, 0]
+            res = 0
+            for i, ch in enumerate(s):
+                cnt[ord(ch) - 97] += 1
+                key = (cnt[0] - cnt[1], cnt[1] - cnt[2])
+                if key in pos:
+                    res = max(res, i - pos[key])
+                else:
+                    pos[key] = i
+            return res
+
+        x = calc1(s)
+        y = max(calc2(s, "a", "b"), calc2(s, "b", "c"), calc2(s, "a", "c"))
+        z = calc3(s)
+        return max(x, y, z)
